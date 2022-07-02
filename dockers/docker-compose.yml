@@ -1,0 +1,116 @@
+version: "3.9"
+
+services:
+
+  #  # 为project定义服务
+  redis:
+    # 指定一个自定义容器名称，而不是生成的默认名称。
+    container_name: rd_redis
+    # 服务的镜像名称或镜像ID。如果镜像在本地不存在，Compose将会尝试拉取镜像
+    image: boiling/redis:latest
+    build:
+      context: ./redis
+      dockerfile: Dockerfile
+    # 配置端口 - "宿主机端口:容器暴露端口"
+    ports:
+      - 6379:6379
+    # 配置容器连接的网络，引用顶级 networks 下的条目(就是最下面配置的networks(一级目录))
+    networks:
+      inner:
+        ipv4_address: 172.16.0.10
+        # ipv6_address: 2001:3984:3989::10
+      # outer:
+      #   ipv4_address: 172.18.0.10
+      #   ipv6_address: 2001:3984:3989::10
+      #   为单redis创建别名, REDIS_URL标记为redis服务的地址. (不配置aliases也可以, 这样就通过定义的服务名: redis链接)
+      #   aliases:
+      #     - REDIS_URL
+    # 挂载
+    volumes:
+      - "/rendu-env/dockers/redis/conf/redis.conf:/etc/redis/redis.conf"
+      - "/rendu-env/dockers/redis/data:/data"
+    # 容器总是重新启动
+    restart: always
+    # 相当于执行一些命令
+    # command:
+    #   redis-server /etc/redis/redis.conf --appendonly yes
+    # 使用该参数，container内的root拥有真正的root权限。
+    privileged: true
+
+  mariadb:
+    container_name: rd_mariadb
+    image: boiling/mariadb:latest
+    restart: always
+    build:
+      context: ./mariadb
+      dockerfile: Dockerfile
+    ports:
+      - 3306:3306
+    # 添加环境变量
+    environment:
+      # root 密码
+      MARIADB_ROOT_PASSWORD: root
+      # root 允许登录的host
+      MYSQL_ROOT_HOST: '%'
+      # 时区
+      TIME_ZONE: Asia/Shanghai
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "/rendu-env/dockers/mariadb/conf:/etc/mysql/conf.d"
+      - "/rendu-env/dockers/mariadb/logs:/var/log/mysql"
+      - "/rendu-env/dockers/mariadb/data:/var/lib/mysql"
+      # - "/rendu-env/dockers/mysql/sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
+    networks:
+      inner:
+        ipv4_address: 172.16.0.11
+        # ipv6_address: 2001:3984:3989::10
+      # outer:
+      #   ipv4_address: 172.18.0.11
+        # ipv6_address: 2001:3984:3989::10
+        # aliases:
+        #   - MYSQL_URL
+ 
+    # command: --init-file /docker-entrypoint-initdb.d/init.sql
+    privileged: true
+
+  ubuntu:
+    container_name: rd_ubuntu
+    image: boiling/ubuntu:latest
+    restart: always
+    build:
+      context: ./ubuntu
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    ports:
+      - "22:22" # 22是ssh端口
+      - "873:873" # 873是srync端口
+    tty: true
+    networks:
+      inner:
+        ipv4_address: 172.16.0.12
+        # ipv6_address: 2001:3984:3989::10
+      # outer:
+      #   ipv4_address: 172.18.0.12
+      #   ipv6_address: 2001:3984:3989::10
+    cap_add:
+        - ALL
+
+networks:
+  inner:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.0.0/24"
+      # - subnet: "2001:3984:3989::/64"
+
+  # outer:
+  #   driver: bridge
+  #   ipam:
+  #     driver: default
+  #     config:
+  #     - subnet: "172.18.0.0/24"
+  #     # - subnet: "2001:3984:3989::/64"
+  #   driver_opts:
+  #     foo: "1"
+  #     bar: "2"
