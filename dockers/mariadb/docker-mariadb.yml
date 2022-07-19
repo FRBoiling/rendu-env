@@ -21,9 +21,9 @@ services:
       TIME_ZONE: Asia/Shanghai
     volumes:
       - "/etc/localtime:/etc/localtime"
-      - "/rendu-env/dockers/mariadb/conf:/etc/mysql/conf.d"
-      - "/rendu-env/dockers/mariadb/logs:/var/log/mysql"
-      - "/rendu-env/dockers/mariadb/data:/var/lib/mysql"
+      - "./conf:/etc/mysql/conf.d"
+      - "./logs:/var/log/mysql"
+      - "./data:/var/lib/mysql"
       # - "/rendu-env/dockers/mysql/sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
       inner:
