@@ -26,14 +26,14 @@ services:
       - "./data:/var/lib/mysql"
       # - "/rendu-env/dockers/mysql/sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
-      inner:
-        ipv4_address: 172.16.0.11
+    #   inner:
+    #   ipv4_address: 172.16.0.11
     #     ipv6_address: 2001:3984:3989::10
     #   outer:
     #     ipv4_address: 172.18.0.11
     #     ipv6_address: 2001:3984:3989::10
-    #     aliases:
-    #       - MYSQL_URL
+         aliases:
+           - MYSQL_URL
  
     # command: --init-file /docker-entrypoint-initdb.d/init.sql
     privileged: true

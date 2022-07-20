@@ -16,15 +16,16 @@ services:
       - 6379:6379
     # 配置容器连接的网络，引用顶级 networks 下的条目(就是最下面配置的networks(一级目录))
     networks:
-      inner:
-        ipv4_address: 172.16.0.10
+    
+    #  inner:
+    #    ipv4_address: 172.16.0.10
     #     ipv6_address: 2001:3984:3989::10
     #   outer:
     #     ipv4_address: 172.18.0.10
     #     ipv6_address: 2001:3984:3989::10
     #     为单redis创建别名, REDIS_URL标记为redis服务的地址. (不配置aliases也可以, 这样就通过定义的服务名: redis链接)
-    #     aliases:
-    #       - REDIS_URL
+        aliases:
+           - REDIS_URL
     # 挂载
     volumes:
       - "./conf/redis.conf:/etc/redis/redis.conf"
