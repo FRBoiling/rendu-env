@@ -2,6 +2,7 @@ version: "3.9"
 
 networks:
   inner:
+    name: rd_inner_net
     # external: true
     driver: bridge 
     ipam:
@@ -110,22 +111,3 @@ services:
       # outer:
       #   ipv4_address: 172.18.0.12
       #   ipv6_address: 2001:3984:3989::10
-
-
-  # inner:
-  #   ipam:
-  #     driver: default
-  #     config:
-  #       - subnet: "172.16.0.0/24"
-  #     # - subnet: "2001:3984:3989::/64"
-
-  # outer:
-  #   driver: bridge
-  #   ipam:
-  #     driver: default
-  #     config:
-  #     - subnet: "172.18.0.0/24"
-  #     # - subnet: "2001:3984:3989::/64"
-  #   driver_opts:
-  #     foo: "1"
-  #     bar: "2"
