@@ -1,9 +1,14 @@
 version: "3.9"
 
 networks:
-  inner:
-    name: rd_inner
-
+  inner:  #自定义网络
+    name: network_inner # 指定一个自定义网络名称，而不是生成的默认名称。
+    driver: bridge 
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1 #网关地址
+          
 services:
   rd_ubuntu:    
     container_name: rd_ubuntu     # 指定一个自定义容器名称，而不是生成的默认名称。
@@ -13,13 +18,13 @@ services:
       - ALL           # 使用ALL参数，container内的root拥有全部权限。同privileged: true类似
     build:                    # 构建参数
       context: .              # docker配置目录
-      dockerfile: dockerfile  # dockerfile文件名
+      dockerfile: Dockerfile  # dockerfile文件名
       args:
         buildno: 1
     ports:              # 配置端口 - "宿主机端口:容器暴露端口"
       - "22:22"         # 22是ssh端口      
       - "873:873"       # 873是srync端口
     networks:           # 配置所属网络，引用networks下的条目(就是最上面配置的networks中配置的网络)
-      inner:            # 加入到名为inner的网络
-        aliases: 
-          - UBUNTU_URL  # 为本容器创建别名
+      inner:
+        aliases:
+          - UNBUNTU_URL
