@@ -22,6 +22,7 @@ COPY ninja /usr/bin
 
 # 网络
 RUN apt-get install -y net-tools
+RUN apt-get install -y iputils-ping
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config

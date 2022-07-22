@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+
+  ubuntu:    
+    container_name: rd_ubuntu # 指定一个自定义容器名称，而不是生成的默认名称。
+    image: ubuntu:latest			# 服务的镜像名称或镜像ID。如果镜像在本地不存在，Compose将会尝试拉取镜像
+    restart: always						# 容器总是重新启动
+    cap_add:
+      - ALL				# 使用ALL参数，container内的root拥有全部权限。同privileged: true类似
+    build:				# 构建参数
+      context: ./ubuntu  					# docker配置目录
+      dockerfile: Dockerfile			# dockerfile文件名
+      args:
+        buildno: 1
+    ports:			# 配置端口 - "宿主机端口:容器暴露端口"
+      - "22:22" # 22是ssh端口      
+      - "873:873" # 873是srync端口
+    networks:	# 配置所属网络，引用networks下的条目(就是最上面配置的networks中配置的网络)
+      inner:	# 加入到名为inner的网络
+        aliases:	
+          - UBUNTU_URL	# 为本容器创建别名
+      # inner:  固定ip
+      #   ipv4_address: 172.16.0.12
+    tty: true
+
