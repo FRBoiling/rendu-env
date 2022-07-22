@@ -1,24 +1,31 @@
 # Compose 版本 Version 2支持更多的指令
 version: "3.9"
 
+networks:
+  inner:  #自定义网络
+    name: network_inner # 指定一个自定义网络名称，而不是生成的默认名称。
+    driver: bridge 
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1 #网关地址
+
 services:
   mariadb:
     container_name: rd_mariadb
     image: boiling/mariadb:latest
     restart: always
+    cap_add:
+      - ALL
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - 3306:3306
-    # 添加环境变量
-    environment:
-      # root 密码
-      MARIADB_ROOT_PASSWORD: root
-      # root 允许登录的host
-      MYSQL_ROOT_HOST: '%'
-      # 时区
-      TIME_ZONE: Asia/Shanghai
+    environment:  # 添加环境变量
+      MARIADB_ROOT_PASSWORD: root # root 密码
+      MYSQL_ROOT_HOST: '%'  # root 允许登录的host
+      TIME_ZONE: Asia/Shanghai  # 时区
     volumes:
       - "/etc/localtime:/etc/localtime"
       - "./conf:/etc/mysql/conf.d"
@@ -26,23 +33,8 @@ services:
       - "./data:/var/lib/mysql"
       # - "/rendu-env/dockers/mysql/sql/init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
-    #   inner:
-    #   ipv4_address: 172.16.0.11
-    #     ipv6_address: 2001:3984:3989::10
-    #   outer:
-    #     ipv4_address: 172.18.0.11
-    #     ipv6_address: 2001:3984:3989::10
-         aliases:
-           - MYSQL_URL
+      inner:
+        aliases:
+          - MYSQL_URL
  
     # command: --init-file /docker-entrypoint-initdb.d/init.sql
-    privileged: true
-
-    
-networks:
-  inner:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.16.0.0/24"
-      # - subnet: "2001:3984:3989::/64"
