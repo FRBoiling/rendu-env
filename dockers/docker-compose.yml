@@ -2,7 +2,7 @@ version: "3.9"
 
 networks:
   inner:
-    name: rd_inner_net
+    name: network_inner
     # external: true
     driver: bridge 
     ipam:
@@ -99,8 +99,6 @@ services:
         buildno: 1
     ports:
       - "22:22" # 22是ssh端口
-      - "873:873" # 873是srync端口
-
     tty: true
     networks:
       inner:
