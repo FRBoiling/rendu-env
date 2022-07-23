@@ -1,9 +1,11 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 LABEL rendu <419610242@qq.com>
 
 # 换源
-RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list && \
-    sed -i s@/security.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list && \
+RUN cd /etc/apt \
+    sed -i 's@/archive.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
+    sed -i 's@/security.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
+    sed -i 's@/ports.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
     apt clean 
 
 # 更新
@@ -19,6 +21,7 @@ RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_confi
 
 # 通用工具
 RUN apt-get install -y vim
+RUN apt-get install -y git
 
 # zsh
 RUN apt-get install -y zsh
