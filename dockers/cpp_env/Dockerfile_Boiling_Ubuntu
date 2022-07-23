@@ -1,0 +1,32 @@
+FROM boiling/ubuntu:20.04
+LABEL rendu <419610242@qq.com>
+
+# 更新
+RUN apt-get update && apt-get -y upgrade
+
+# 编译工具
+RUN apt-get install -y build-essential
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
+RUN apt-get install -y gdb
+
+RUN apt-get install -y ninja-build
+COPY ninja /usr/bin
+#COPY gn /usr/bin
+
+#RUN apt-get install -y clang
+
+# 删除 apt update 产生的缓存文件
+# 因为 docker 的文件系统是层文件系统，上一个层中缓存有apt-get update的结果，
+# 那么下次 Dockerfile 运行时就会直接使用之前的缓存，
+# 这样 docker 中的 apt 软件源就不是最新的软件列表了，将会带来缓存过期的问题。
+# 并且这些缓存将占用不少空间，导致最终生成的image非常庞大，
+# 而这些垃圾文件是我们最终的image中无需使用到的东西，我们应当在Docker构建过程中予以删除。
+RUN apt clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# 修改 root 的密码为 root
+RUN echo 'root:root' |chpasswd
+
+CMD [ "rd_cpp_env" ]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+
