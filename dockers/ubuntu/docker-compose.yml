@@ -10,7 +10,7 @@ networks:
           gateway: 172.20.0.1 #网关地址
           
 services:
-  rd_ubuntu:    
+  ubuntu:    
     container_name: rd_ubuntu     # 指定一个自定义容器名称，而不是生成的默认名称。
     image: boiling/ubuntu:20.04  # 服务的镜像名称或镜像ID。如果镜像在本地不存在，Compose将会尝试拉取镜像
     restart: always   # 容器总是重新启动
@@ -23,7 +23,6 @@ services:
         buildno: 1
     ports:              # 配置端口 - "宿主机端口:容器暴露端口"
       - "22:22"         # 22是ssh端口      
-      - "873:873"       # 873是srync端口
     networks:           # 配置所属网络，引用networks下的条目(就是最上面配置的networks中配置的网络)
       inner:
         aliases:
