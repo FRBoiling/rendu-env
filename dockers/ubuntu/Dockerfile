@@ -9,17 +9,6 @@ RUN sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list &
 # 更新
 RUN apt-get update && apt-get -y upgrade
 
-# 编译工具
-RUN apt-get install -y build-essential
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
-RUN apt-get install -y gdb
-
-RUN apt-get install -y ninja-build
-COPY ninja /usr/bin
-#COPY gn /usr/bin
-
-#RUN apt-get install -y clang
-
 # 网络
 RUN apt-get install -y net-tools
 RUN apt-get install -y iputils-ping
@@ -30,7 +19,6 @@ RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_confi
 
 # 通用工具
 RUN apt-get install -y vim
-RUN apt-get install -y git
 
 # zsh
 RUN apt-get install -y zsh
@@ -38,8 +26,7 @@ RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
     && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
     && chsh -s /bin/zsh
 RUN echo $SHELL
-# 安装 autojump 插件
-RUN apt install -y autojump
+
 # 安装 zsh-syntax-highlighting 插件
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
     ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -47,12 +34,6 @@ RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions \
     ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 RUN sed -ri 's/^plugins=.*/plugins=(git autojump zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
-
-# Clion 需要 rsync 同步数据
-RUN apt-get install -y rsync
-RUN sed -ri 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/g' /etc/default/rsync
-RUN mkdir /root/sync
-COPY rsync.conf /etc
 
 # 删除 apt update 产生的缓存文件
 # 因为 docker 的文件系统是层文件系统，上一个层中缓存有apt-get update的结果，
