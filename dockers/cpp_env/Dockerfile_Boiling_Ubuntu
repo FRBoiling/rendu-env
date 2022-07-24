@@ -2,6 +2,7 @@ FROM boiling/ubuntu:20.04
 LABEL rendu <419610242@qq.com>
 
 # 更新
+RUN apt clean
 RUN apt-get update && apt-get -y upgrade
 
 # 编译工具

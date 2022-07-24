@@ -22,7 +22,7 @@ services:
       args:
         buildno: 1
     ports:              # 配置端口 - "宿主机端口:容器暴露端口"
-      - "22:22"         # 22是ssh端口      
+      - "23:22"         # 22是ssh端口      
       - "873:873"       # 873是srync端口
     networks:           # 配置所属网络，引用networks下的条目(就是最上面配置的networks中配置的网络)
       inner:
