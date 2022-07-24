@@ -1,15 +1,19 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 LABEL rendu <419610242@qq.com>
 
 # 换源
 RUN cd /etc/apt \
-    sed -i 's@/archive.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
-    sed -i 's@/security.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
-    sed -i 's@/ports.ubuntu.com/@/mirrors.aliyun.com/@g' /etc/apt/sources.list && \
-    apt clean 
+    cp /etc/apt/sources.list /etc/apt/sources.list.bak 
+
+# COPY sources.list.tuna /etc/apt/sources.list
+RUN sed -i 's@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list && \
+    sed -i 's@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list && \
+    sed -i 's@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list 
 
 # 更新
-RUN apt-get update && apt-get -y upgrade
+RUN apt clean 
+RUN apt update 
+RUN apt -y upgrade
 
 # 网络
 RUN apt-get install -y net-tools
@@ -30,6 +34,8 @@ RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
     && chsh -s /bin/zsh
 RUN echo $SHELL
 
+# 安装 zsh-syntax-highlighting 插件
+RUN apt install autojump
 # 安装 zsh-syntax-highlighting 插件
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
     ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
