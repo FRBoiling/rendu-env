@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM boiling/ubuntu:20.04
 LABEL rendu <419610242@qq.com>
 
 # 更新
