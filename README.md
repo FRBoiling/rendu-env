@@ -7,6 +7,12 @@ c++项目的开发生态,环境基于docker的ubuntu系统
 #### 软件架构
 软件架构说明
 
+docker manifest create boiling/ubuntu:20.04 \
+    45.55.81.106:5000/coolapp-ppc64le-linux:v1 \
+    45.55.81.106:5000/coolapp-arm-linux:v1 \
+    45.55.81.106:5000/coolapp-amd64-linux:v1 \
+    45.55.81.106:5000/coolapp-amd64-windows:v1
+
 
 #### 安装教程
 

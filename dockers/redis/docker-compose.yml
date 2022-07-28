@@ -18,9 +18,6 @@ services:
     restart: always
     cap_add:
       - ALL
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:        # 配置端口 
       - 6379:6379 # 配置端口 - "宿主机端口:容器暴露端口"
     environment:  # 添加环境变量
