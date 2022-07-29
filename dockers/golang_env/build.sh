@@ -1,3 +1,11 @@
 #!/bin/bash
-# docker-compose -f docker-compose.yml up -d
-docker-compose -p rd_env -f docker-compose.yml up -d
+
+docker buildx build \
+    --platform linux/amd64,linux/arm64 \
+    -t boiling/go_env:latest \
+    --push \
+    .
+
+# docker build \
+#     -t boiling/go_env:latest \
+#     .
