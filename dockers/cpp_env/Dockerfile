@@ -10,30 +10,38 @@ RUN sed -i 's@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/so
     sed -i 's@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list && \
     sed -i 's@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list 
 
+# 环境变量
+ENV TZ=Asia/Shanghai \
+    DEBIAN_FRONTEND=noninteractive
+
 # 更新
 RUN apt clean 
 RUN apt update 
 RUN apt -y upgrade
 
-# 网络
+# 通用工具
+RUN apt-get install -y vim
+RUN apt-get install -y git
 RUN apt-get install -y net-tools
 RUN apt-get install -y iputils-ping
+
+# ssh链接工具
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
 RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 #RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
-
-# 编译工具
-RUN apt-get install -y build-essential
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
-RUN apt-get install -y gdb
-RUN apt-get install -y ninja-build
 
 # Clion 需要 rsync 同步数据
 RUN apt-get install -y rsync
 RUN sed -ri 's/RSYNC_ENABLE=false/RSYNC_ENABLE=true/g' /etc/default/rsync
 RUN mkdir /root/sync
 COPY rsync.conf /etc
+
+# 编译工具
+RUN apt-get install -y build-essential
+RUN apt-get install -y cmake
+RUN apt-get install -y gdb
+RUN apt-get install -y ninja-build
 
 # 删除 apt update 产生的缓存文件
 # 因为 docker 的文件系统是层文件系统，上一个层中缓存有apt-get update的结果，
