@@ -56,8 +56,9 @@ RUN apt clean && \
 # 修改 root 的密码为 root
 RUN echo 'root:root' |chpasswd
 
+CMD [ "rd_ubuntu" ]
+
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-CMD [ "rd_ubuntu" ]
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 

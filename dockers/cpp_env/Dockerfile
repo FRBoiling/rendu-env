@@ -1,20 +1,33 @@
-FROM boiling/ubuntu:20.04
+FROM ubuntu:20.04
 LABEL rendu <419610242@qq.com>
 
+# 换源
+RUN cd /etc/apt \
+    cp /etc/apt/sources.list /etc/apt/sources.list.bak 
+
+# COPY sources.list.tuna /etc/apt/sources.list
+RUN sed -i 's@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list && \
+    sed -i 's@/security.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list && \
+    sed -i 's@/ports.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g' /etc/apt/sources.list 
+
 # 更新
-RUN apt clean
-RUN apt-get update && apt-get -y upgrade
+RUN apt clean 
+RUN apt update 
+RUN apt -y upgrade
+
+# 网络
+RUN apt-get install -y net-tools
+RUN apt-get install -y iputils-ping
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+#RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
 # 编译工具
 RUN apt-get install -y build-essential
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y cmake
 RUN apt-get install -y gdb
-
 RUN apt-get install -y ninja-build
-COPY ninja /usr/bin
-#COPY gn /usr/bin
-
-#RUN apt-get install -y clang
 
 # Clion 需要 rsync 同步数据
 RUN apt-get install -y rsync
@@ -35,5 +48,8 @@ RUN apt clean && \
 RUN echo 'root:root' |chpasswd
 
 CMD [ "rd_cpp_env" ]
+
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT [ "docker-entrypoint.sh" ]
 

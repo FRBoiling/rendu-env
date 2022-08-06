@@ -25,23 +25,6 @@ RUN apt-get install -y curl
 RUN apt-get install -y zip
 RUN apt-get install -y unzip
 
-# zsh
-RUN apt-get install -y zsh
-RUN git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh \
-    && cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc \
-    && chsh -s /bin/zsh
-RUN echo $SHELL
-
-# 安装 zsh-syntax-highlighting 插件
-RUN apt install autojump
-# 安装 zsh-syntax-highlighting 插件
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
-    ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-# 安装 zsh-autosuggestions 插件
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions \
-    ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN sed -ri 's/^plugins=.*/plugins=(git autojump zsh-syntax-highlighting zsh-autosuggestions)/' ~/.zshrc
-
 # 网络
 RUN apt-get install -y net-tools
 RUN apt-get install -y iputils-ping
