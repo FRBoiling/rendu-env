@@ -1,4 +1,4 @@
 dockers/mariadb/data
 dockers/redis/data
 *.DS_Store
-.DS_Store
+
