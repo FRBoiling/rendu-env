@@ -1,6 +1,7 @@
 # rendu-env
 
 ## 介绍
+linux开发环境配置模版
 包括 dokers，git，shell，vim 等常用配置
 具体介绍请查看子文件夹内说明文档
 
